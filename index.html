@@ -211,7 +211,7 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
@@ -231,7 +231,8 @@
         .product-img {
             height: 200px;
             width: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            background: #fff;
         }
 
         .product-info {
@@ -457,7 +458,7 @@
             }
 
             .products-grid {
-                gap: 0.8rem;
+                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
@@ -471,7 +472,7 @@
             }
 
             .products-grid {
-                gap: 0.6rem;
+                grid-template-columns: 1fr;
             }
         }
     </style>
