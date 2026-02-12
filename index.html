@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر الأدوات المنزلية - الرئيسية</title>
+    <title>نموذج متجر الكتروني - الرئيسية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -107,6 +107,28 @@
             padding: 0 6px;
         }
 
+        .top-ad-strip {
+            background: var(--secondary-color);
+            color: #1f2a3a;
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .top-ad-track {
+            display: inline-block;
+            padding: 0.45rem 0;
+            font-weight: 700;
+            white-space: nowrap;
+            animation: topAdMarquee 14s linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes topAdMarquee {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+
         main {
             max-width: 1200px;
             margin: 2rem auto;
@@ -118,6 +140,24 @@
             gap: 0.5rem;
             flex-wrap: wrap;
             margin-bottom: 1.25rem;
+        }
+
+        .header-category-tabs {
+            max-width: 1200px;
+            margin: 0.6rem auto 0;
+            padding: 0 0.25rem;
+        }
+
+        .header-category-tabs .filter-tab {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .header-category-tabs .filter-tab.active {
+            background: white;
+            color: var(--primary-color);
+            border-color: white;
         }
 
         .filter-tab {
@@ -211,8 +251,8 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1rem;
             margin-bottom: 3rem;
         }
 
@@ -229,49 +269,62 @@
         }
 
         .product-img {
-            height: 200px;
+            height: 95px;
             width: 100%;
             object-fit: contain;
-            background: #fff;
+            object-position: center;
+            background: #f5f7fa;
         }
 
         .product-info {
-            padding: 1.2rem;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
         }
 
         .product-title {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.92rem;
+            margin-bottom: 0;
             color: var(--primary-color);
+            line-height: 1.25;
         }
 
         .product-description {
             color: var(--gray-color);
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
+            margin-bottom: 0;
+            font-size: 0.76rem;
+            line-height: 1.25;
         }
 
         .product-price {
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 0.9rem;
             color: var(--dark-color);
-            margin-bottom: 1rem;
+            margin-bottom: 0;
         }
 
         .product-category {
             display: inline-block;
             background-color: #e9ecef;
             color: var(--gray-color);
-            padding: 0.3rem 0.8rem;
+            padding: 0.25rem 0.6rem;
             border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
+            font-size: 0.72rem;
+            margin-bottom: 0;
         }
 
         .product-actions {
             display: flex;
             gap: 0.5rem;
             align-items: center;
+        }
+
+        .product-meta {
+            margin: 0;
+            font-size: 0.76rem;
+            color: var(--gray-color);
+            line-height: 1.25;
         }
 
         .add-cart-btn {
@@ -406,6 +459,35 @@
             font-size: 1rem;
         }
 
+        .order-type-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 0.2rem 0;
+        }
+
+        .order-type-btn {
+            border: 1px solid #d0d7e2;
+            background: white;
+            color: var(--primary-color);
+            padding: 0.45rem 0.85rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .order-type-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .delivery-only.hidden {
+            display: none;
+        }
+
         .checkout-btn {
             width: 100%;
             margin-top: 0.75rem;
@@ -434,6 +516,28 @@
             color: #6c757d;
         }
 
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            background: rgba(33, 37, 41, 0.92);
+            color: white;
+            padding: 0.55rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.86rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+            z-index: 3000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         footer {
             background-color: var(--dark-color);
             color: white;
@@ -458,7 +562,13 @@
             }
 
             .products-grid {
-                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .header-category-tabs {
+                margin-top: 0.5rem;
+                padding: 0;
+                justify-content: center;
             }
         }
 
@@ -478,16 +588,19 @@
     </style>
 </head>
 <body>
+    <div id="top-ad-strip" class="top-ad-strip" hidden>
+        <div id="top-ad-track" class="top-ad-track"></div>
+    </div>
+
     <header>
         <div class="header-container">
-            <div class="logo">
+            <a href="#" class="logo nav-link" data-page="home" style="text-decoration: none; color: inherit;">
                 <i class="fas fa-home"></i>
-                <span>مَتْجَرُ الْأَدَوَاتِ الْمَنْزِلِيَّةِ</span>
-            </div>
+                <span>نموذج متجر الكتروني</span>
+            </a>
             <nav>
                 <ul>
                     <li><a href="#" class="nav-link active" data-page="home">الرئيسية</a></li>
-                    <li><a href="#" class="nav-link" data-page="products">المنتجات</a></li>
                     <li>
                         <button id="open-cart-btn" class="cart-button" type="button">
                             <i class="fas fa-shopping-cart"></i> سلة المشتريات
@@ -497,19 +610,14 @@
                 </ul>
             </nav>
         </div>
+        <div id="category-tabs" class="filter-tabs header-category-tabs"></div>
     </header>
 
     <main>
         <div id="alert-message" class="alert alert-error"></div>
-        <div id="category-tabs" class="filter-tabs"></div>
+        <div id="toast-message" class="toast-message" aria-live="polite"></div>
 
         <section id="home-page" class="page active">
-            <div class="hero">
-                <h1>أفضل الأدوات المنزلية بجودة عالية</h1>
-                <p>اكتشف تشكيلتنا الواسعة من الأدوات المنزلية المتميزة التي تجمع بين الجودة العالية والتصميم العصري لتناسب جميع أذواقكم ومتطلبات منازلكم.</p>
-                <a href="#" class="btn nav-link" data-page="products">استعرض المنتجات</a>
-            </div>
-
             <h2 class="section-title">منتجاتنا المميزة</h2>
             <div class="products-grid" id="featured-products"></div>
         </section>
@@ -534,10 +642,15 @@
 
             <div class="customer-form">
                 <input type="text" id="customer-name" placeholder="الاسم الكامل">
-                <textarea id="customer-address" rows="2" placeholder="العنوان"></textarea>
+                <div class="order-type-group" aria-label="نوع الطلب">
+                    <button type="button" class="order-type-btn active" data-order-type="delivery">توصيل للمنزل</button>
+                    <button type="button" class="order-type-btn" data-order-type="preorder">استلام باليد</button>
+                    <input type="hidden" id="order-type" value="delivery">
+                </div>
+                <textarea id="customer-address" class="delivery-only" rows="2" placeholder="العنوان"></textarea>
                 <input type="tel" id="customer-phone" placeholder="رقم الهاتف">
-                <button id="detect-location-btn" class="btn location-btn" type="button">تحديد موقعي</button>
-                <p id="location-status" class="location-status">لم يتم تحديد الموقع بعد.</p>
+                <button id="detect-location-btn" class="btn location-btn delivery-only" type="button">تحديد موقعي</button>
+                <p id="location-status" class="location-status delivery-only">لم يتم تحديد الموقع بعد.</p>
                 <button id="checkout-btn" class="btn checkout-btn" type="button">إتمام الطلب عبر واتساب</button>
             </div>
         </div>
@@ -545,7 +658,7 @@
 
     <footer>
         <div class="footer-content">
-            <p>© 2026 متجر الأدوات المنزلية. جميع الحقوق محفوظة.</p>
+            <p>© 2026 نموذج متجر الكتروني. جميع الحقوق محفوظة.</p>
             <p style="margin-top: 0.5rem; color: #ccc;">
                 <i class="fas fa-phone"></i> ٠٥٠١٢٣٤٥٦٧ |
                 <i class="fas fa-envelope"></i> info@home-tools.com
@@ -557,10 +670,14 @@
     <script>
         const BACKENDLESS_APP_URL = "https://subtlegrass-us.backendless.app";
         const PRODUCTS_TABLE = "Products";
+        const SETTINGS_TABLE = "StoreSettings";
+        const AD_SETTING_KEY = "top_ad_text";
         const WHATSAPP_NUMBER = "963957618772";
 
         let products = [];
         let productsStore = null;
+        let settingsStore = null;
+        let topAdText = "";
         let cartItems = [];
         let activeCategory = "الكل";
         let customerLocation = null;
@@ -568,10 +685,29 @@
         function initializeBackendless() {
             Backendless.initApp(BACKENDLESS_APP_URL);
             productsStore = Backendless.Data.of(PRODUCTS_TABLE);
+            settingsStore = Backendless.Data.of(SETTINGS_TABLE);
         }
 
         async function loadProducts() {
             products = await productsStore.find();
+        }
+
+
+        async function loadTopAdText() {
+            const queryBuilder = Backendless.DataQueryBuilder.create();
+            queryBuilder.setWhereClause(`settingKey = '${AD_SETTING_KEY}'`);
+            queryBuilder.setPageSize(1);
+            const result = await settingsStore.find(queryBuilder);
+
+            if (result && result.length) {
+                topAdText = (result[0].settingValue || result[0].adText || "").trim();
+                return;
+            }
+
+            const fallback = await settingsStore.find();
+            topAdText = fallback && fallback.length
+                ? (fallback[0].settingValue || fallback[0].adText || "").trim()
+                : "";
         }
 
         function createProductCard(product) {
@@ -582,6 +718,8 @@
                 <div class="product-info">
                     <span class="product-category">${product.category}</span>
                     <h3 class="product-title">${product.name}</h3>
+                    <p class="product-meta"><strong>الكود:</strong> ${product.productnum || "-"}</p>
+                    <p class="product-meta"><strong>الكمية:</strong> ${Number.isFinite(Number(product.quantity)) ? Number(product.quantity) : 0}</p>
                     <p class="product-description">${product.description}</p>
                     <div class="product-price">${Number(product.price).toFixed(2)} ل.س</div>
                     <div class="product-actions">
@@ -625,6 +763,21 @@
             displayProducts("all-products", filteredProducts);
         }
 
+        function renderTopAdStrip() {
+            const strip = document.getElementById("top-ad-strip");
+            const track = document.getElementById("top-ad-track");
+            if (!strip || !track) return;
+
+            if (!topAdText) {
+                strip.hidden = true;
+                track.textContent = "";
+                return;
+            }
+
+            track.textContent = topAdText;
+            strip.hidden = false;
+        }
+
         function renderCategoryTabs() {
             const tabsContainer = document.getElementById("category-tabs");
             if (!tabsContainer) return;
@@ -645,6 +798,7 @@
                     activeCategory = category;
                     renderCategoryTabs();
                     renderSections();
+                    setActivePage("products");
                 });
                 tabsContainer.appendChild(btn);
             });
@@ -670,6 +824,23 @@
             }, 2500);
         }
 
+        let toastTimeoutId = null;
+        function showToast(message) {
+            const toast = document.getElementById("toast-message");
+            if (!toast) return;
+
+            toast.textContent = message;
+            toast.classList.add("show");
+
+            if (toastTimeoutId) {
+                clearTimeout(toastTimeoutId);
+            }
+
+            toastTimeoutId = setTimeout(() => {
+                toast.classList.remove("show");
+            }, 1600);
+        }
+
         function addToCart(productId) {
             const product = products.find((item) => item.objectId === productId);
             if (!product) return;
@@ -687,7 +858,7 @@
             }
             updateCartCount();
             renderCart();
-            showSuccess("تمت إضافة المنتج إلى السلة");
+            showToast("تمت إضافة المنتج إلى السلة");
         }
 
         function updateCartCount() {
@@ -791,23 +962,65 @@
             );
         }
 
+        function getSelectedOrderType() {
+            const orderTypeInput = document.getElementById("order-type");
+            return orderTypeInput ? orderTypeInput.value : "delivery";
+        }
+
+        function setOrderType(type) {
+            const orderTypeInput = document.getElementById("order-type");
+            if (orderTypeInput) {
+                orderTypeInput.value = type;
+            }
+
+            const buttons = document.querySelectorAll(".order-type-btn[data-order-type]");
+            buttons.forEach((btn) => {
+                btn.classList.toggle("active", btn.getAttribute("data-order-type") === type);
+            });
+
+            updateOrderTypeUI();
+        }
+
+        function updateOrderTypeUI() {
+            const orderType = getSelectedOrderType();
+            const deliveryOnlyElements = document.querySelectorAll(".delivery-only");
+            const isDelivery = orderType === "delivery";
+
+            deliveryOnlyElements.forEach((el) => {
+                el.classList.toggle("hidden", !isDelivery);
+            });
+
+            if (!isDelivery) {
+                customerLocation = null;
+                setLocationStatus("لا يلزم تحديد الموقع في الطلب المسبق.");
+            } else {
+                setLocationStatus("لم يتم تحديد الموقع بعد.");
+            }
+        }
+
         function completeOrderOnWhatsApp() {
             if (!cartItems.length) {
                 showError("السلة فارغة. أضف منتجات أولًا.");
                 return;
             }
 
+            const orderType = getSelectedOrderType();
             const customerName = document.getElementById("customer-name").value.trim();
             const customerAddress = document.getElementById("customer-address").value.trim();
             const customerPhone = document.getElementById("customer-phone").value.trim();
 
-            if (!customerName || !customerAddress || !customerPhone) {
-                showError("يرجى تعبئة الاسم والعنوان ورقم الهاتف قبل إتمام الطلب.");
+            if (!customerName || !customerPhone) {
+                showError("يرجى تعبئة الاسم ورقم الهاتف قبل إتمام الطلب.");
                 return;
             }
 
-            if (!customerLocation) {
-                showError("يرجى تحديد الموقع الجغرافي قبل إتمام الطلب.");
+            if (orderType === "delivery" && !customerAddress) {
+                showError("يرجى تعبئة العنوان لطلب التوصيل.");
+                return;
+            }
+
+            if (orderType === "delivery" && !customerLocation) {
+                showError("يرجى تحديد الموقع الجغرافي قبل إتمام طلب التوصيل.");
                 return;
             }
 
@@ -818,12 +1031,23 @@
                 return `${index + 1}- ${item.name}\nالكمية: ${item.quantity}\nالسعر: ${item.price.toFixed(2)} ل.س\nالمجموع الفرعي: ${subtotal.toFixed(2)} ل.س`;
             }).join("\n\n");
 
+            const orderTypeLabel = orderType === "delivery" ? "توصيل للمنزل" : "استلام باليد";
+            const locationLine = orderType === "delivery" ? `رابط الموقع: ${customerLocation.mapsUrl}` : "رابط الموقع: غير مطلوب";
+            const addressLine = orderType === "delivery" ? `العنوان: ${customerAddress}` : "العنوان: غير مطلوب";
+            const pickupCode = orderType === "preorder"
+                ? String(Math.floor(100000 + Math.random() * 900000))
+                : null;
+            const pickupCodeLine = pickupCode
+                ? `رقم الاستلام: ${pickupCode}`
+                : "";
+
             const message = `طلب جديد من المتجر:
 
+نوع الطلب: ${orderTypeLabel}
 الاسم: ${customerName}
-العنوان: ${customerAddress}
+${addressLine}
 رقم الهاتف: ${customerPhone}
-رابط الموقع: ${customerLocation.mapsUrl}
+${locationLine}${pickupCodeLine ? `\n${pickupCodeLine}` : ""}
 
 تفاصيل الطلب:
 ${itemsText}
@@ -845,27 +1069,30 @@ ${itemsText}
             showSuccess("تم تجهيز الطلب. تم فتح واتساب لإرساله.");
         }
 
-        function setupNavigation() {
-            const pageLinks = document.querySelectorAll(".nav-link[data-page]");
+        function setActivePage(targetPage) {
             const menuLinks = document.querySelectorAll("nav .nav-link[data-page]");
             const pages = document.querySelectorAll(".page");
+
+            menuLinks.forEach((menuLink) => {
+                menuLink.classList.toggle("active", menuLink.getAttribute("data-page") === targetPage);
+            });
+
+            pages.forEach((page) => {
+                page.classList.remove("active");
+                if (page.id === `${targetPage}-page`) {
+                    page.classList.add("active");
+                }
+            });
+        }
+
+        function setupNavigation() {
+            const pageLinks = document.querySelectorAll(".nav-link[data-page]");
 
             pageLinks.forEach((link) => {
                 link.addEventListener("click", function(e) {
                     e.preventDefault();
-
                     const targetPage = this.getAttribute("data-page");
-
-                    menuLinks.forEach((menuLink) => {
-                        menuLink.classList.toggle("active", menuLink.getAttribute("data-page") === targetPage);
-                    });
-
-                    pages.forEach((page) => {
-                        page.classList.remove("active");
-                        if (page.id === `${targetPage}-page`) {
-                            page.classList.add("active");
-                        }
-                    });
+                    setActivePage(targetPage);
                 });
             });
         }
@@ -876,11 +1103,18 @@ ${itemsText}
             const modal = document.getElementById("cart-modal");
             const checkoutBtn = document.getElementById("checkout-btn");
             const detectLocationBtn = document.getElementById("detect-location-btn");
+            const orderTypeButtons = document.querySelectorAll(".order-type-btn[data-order-type]");
 
             openBtn.addEventListener("click", openCartModal);
             closeBtn.addEventListener("click", closeCartModal);
             checkoutBtn.addEventListener("click", completeOrderOnWhatsApp);
             detectLocationBtn.addEventListener("click", detectCustomerLocation);
+            orderTypeButtons.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    setOrderType(btn.getAttribute("data-order-type"));
+                });
+            });
+            setOrderType(getSelectedOrderType());
 
             modal.addEventListener("click", (e) => {
                 if (e.target === modal) {
@@ -897,7 +1131,8 @@ ${itemsText}
 
             try {
                 initializeBackendless();
-                await loadProducts();
+                await Promise.all([loadProducts(), loadTopAdText()]);
+                renderTopAdStrip();
                 renderCategoryTabs();
                 renderSections();
             } catch (error) {
