@@ -672,12 +672,14 @@
         const PRODUCTS_TABLE = "Products";
         const SETTINGS_TABLE = "StoreSettings";
         const AD_SETTING_KEY = "top_ad_text";
-        const WHATSAPP_NUMBER = "963957618772";
+        const WHATSAPP_SETTING_KEY = "store_whatsapp_number";
+        const DEFAULT_WHATSAPP_NUMBER = "963957618772";
 
         let products = [];
         let productsStore = null;
         let settingsStore = null;
         let topAdText = "";
+        let whatsappNumber = DEFAULT_WHATSAPP_NUMBER;
         let cartItems = [];
         let activeCategory = "الكل";
         let customerLocation = null;
@@ -693,21 +695,15 @@
         }
 
 
-        async function loadTopAdText() {
-            const queryBuilder = Backendless.DataQueryBuilder.create();
-            queryBuilder.setWhereClause(`settingKey = '${AD_SETTING_KEY}'`);
-            queryBuilder.setPageSize(1);
-            const result = await settingsStore.find(queryBuilder);
+        async function loadStoreSettings() {
+            const result = await settingsStore.find();
 
-            if (result && result.length) {
-                topAdText = (result[0].settingValue || result[0].adText || "").trim();
-                return;
-            }
+            const adSetting = (result || []).find((item) => item.settingKey === AD_SETTING_KEY);
+            topAdText = adSetting ? (adSetting.settingValue || adSetting.adText || "").trim() : "";
 
-            const fallback = await settingsStore.find();
-            topAdText = fallback && fallback.length
-                ? (fallback[0].settingValue || fallback[0].adText || "").trim()
-                : "";
+            const whatsappSetting = (result || []).find((item) => item.settingKey === WHATSAPP_SETTING_KEY);
+            const dynamicNumber = whatsappSetting ? (whatsappSetting.settingValue || "").trim() : "";
+            whatsappNumber = dynamicNumber || DEFAULT_WHATSAPP_NUMBER;
         }
 
         function createProductCard(product) {
@@ -1054,7 +1050,7 @@ ${itemsText}
 
 الإجمالي الكلي: ${total.toFixed(2)} ل.س`;
 
-            const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
             window.open(waUrl, "_blank");
 
             cartItems = [];
@@ -1131,7 +1127,7 @@ ${itemsText}
 
             try {
                 initializeBackendless();
-                await Promise.all([loadProducts(), loadTopAdText()]);
+                await Promise.all([loadProducts(), loadStoreSettings()]);
                 renderTopAdStrip();
                 renderCategoryTabs();
                 renderSections();
