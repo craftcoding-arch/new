@@ -30,6 +30,9 @@
             background-color: #f5f7fa;
             color: var(--dark-color);
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
@@ -183,6 +186,8 @@
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
+            width: 100%;
+            flex: 1;
         }
 
         .filter-tabs {
@@ -351,8 +356,9 @@
 
         .product-actions {
             display: flex;
-            gap: 0.5rem;
-            align-items: center;
+            flex-direction: column;
+            gap: 0.35rem;
+            align-items: stretch;
             margin-top: auto;
         }
 
@@ -373,6 +379,18 @@
 
         .add-cart-btn:hover {
             background-color: #1f4a8e;
+        }
+
+        .details-btn {
+            width: 100%;
+            background-color: #6c757d;
+            color: white;
+            padding: 0.35rem 0.5rem;
+            line-height: 1.2;
+        }
+
+        .details-btn:hover {
+            background-color: #5a6268;
         }
 
         .no-products {
@@ -423,6 +441,53 @@
 
         .cart-modal.show {
             display: flex;
+        }
+
+        .details-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 2100;
+        }
+
+        .details-modal.show {
+            display: flex;
+        }
+
+        .details-panel {
+            width: 100%;
+            max-width: 560px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .details-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .details-image {
+            width: 100%;
+            height: 190px;
+            object-fit: contain;
+            background: #f5f7fa;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .details-line {
+            margin: 0 0 0.45rem;
+            color: var(--dark-color);
         }
 
         .cart-panel {
@@ -591,7 +656,7 @@
             color: white;
             text-align: center;
             padding: 2rem 1rem;
-            margin-top: 3rem;
+            margin-top: auto;
         }
 
         body * {
@@ -705,6 +770,18 @@
         </div>
     </div>
 
+    <div id="details-modal" class="details-modal">
+        <div class="details-panel">
+            <div class="details-panel-header">
+                <h3>تفاصيل المنتج</h3>
+                <button id="close-details-btn" class="close-modal-btn" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="details-content"></div>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-content">
             <p>© 2026 نموذج متجر الكتروني. جميع الحقوق محفوظة.</p>
@@ -777,17 +854,43 @@
                 <img src="${product.image}" alt="${product.name}" class="product-img">
                 <div class="product-info">
                     <h3 class="product-title">${product.name}</h3>
-                    <p class="product-meta">${product.productnum || "-"}</p>
-                    <p class="product-meta"><strong>الكمية:</strong> ${formatInteger(product.quantity)}</p>
                     <div class="product-price">${formatPrice(product.price)}</div>
                     <div class="product-actions">
+                        <button class="btn details-btn" type="button">التفاصيل</button>
                         <button class="btn add-cart-btn" type="button">إضافة للسلة</button>
                     </div>
                 </div>
             `;
             const addButton = card.querySelector(".add-cart-btn");
+            const detailsButton = card.querySelector(".details-btn");
             addButton.addEventListener("click", () => addToCart(product.objectId));
+            detailsButton.addEventListener("click", () => openDetailsModal(product));
             return card;
+        }
+
+        function openDetailsModal(product) {
+            const modal = document.getElementById("details-modal");
+            const content = document.getElementById("details-content");
+            if (!modal || !content) return;
+
+            content.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="details-image">
+                <p class="details-line"><strong>الاسم:</strong> ${product.name || "-"}</p>
+                <p class="details-line"><strong>الكود:</strong> ${product.productnum || "-"}</p>
+                <p class="details-line"><strong>الفئة:</strong> ${product.category || "-"}</p>
+                <p class="details-line"><strong>السعر:</strong> ${formatPrice(product.price)}</p>
+                <p class="details-line"><strong>الكمية:</strong> ${formatInteger(product.quantity)}</p>
+                <p class="details-line"><strong>الصناعة:</strong> ${product.manufacture || "-"}</p>
+                <p class="details-line"><strong>الماركة:</strong> ${product.brand || "-"}</p>
+                <p class="details-line"><strong>الوصف:</strong> ${product.description || "-"}</p>
+            `;
+            modal.classList.add("show");
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById("details-modal");
+            if (!modal) return;
+            modal.classList.remove("show");
         }
 
         function displayProducts(targetId, list) {
@@ -1215,9 +1318,23 @@ ${itemsText}
             });
         }
 
+        function setupDetailsUI() {
+            const modal = document.getElementById("details-modal");
+            const closeBtn = document.getElementById("close-details-btn");
+            if (!modal || !closeBtn) return;
+
+            closeBtn.addEventListener("click", closeDetailsModal);
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    closeDetailsModal();
+                }
+            });
+        }
+
         document.addEventListener("DOMContentLoaded", async function() {
             setupNavigation();
             setupCartUI();
+            setupDetailsUI();
             setupCategoryMenuUI();
             updateCartCount();
             renderCart();
